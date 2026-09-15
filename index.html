@@ -339,15 +339,27 @@ nav button.on svg{stroke-width:2.2}
         <button data-t="system">시스템</button><button data-t="light">라이트</button><button data-t="dark">다크</button>
       </div>
     </div>
+    <div class="sec"><h2>구글시트 동기화</h2></div>
+    <div class="card">
+      <div class="sub" style="margin-bottom:12px">저장할 때마다 구글시트에 올리고, 앱을 열 때 시트가 더 최신이면 가져옵니다. 설정 방법은 저장소의 SHEETS_SYNC_SETUP.md 참고.</div>
+      <label class="fld" for="syncUrl">웹앱 URL</label>
+      <input type="text" id="syncUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" autocapitalize="off" spellcheck="false" style="margin-bottom:10px">
+      <label class="fld" for="syncToken">토큰</label>
+      <input type="text" id="syncToken" placeholder="Apps Script의 TOKEN 값" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="fldrow" style="margin:10px 0 6px"><button class="btn" id="syncSave" style="flex:1">저장</button><button class="btn" id="syncTest" style="flex:1">연결 테스트</button></div>
+      <div class="fldrow" style="margin-bottom:10px"><button class="btn" id="syncPush" style="flex:1">지금 올리기</button><button class="btn" id="syncPull" style="flex:1">시트에서 가져오기</button></div>
+      <label class="fldrow" style="align-items:center;gap:8px;font-size:13.5px"><input type="checkbox" id="syncAuto" checked>저장할 때 자동으로 올리기</label>
+      <div class="mini" id="syncStatus" style="margin-top:8px">연결 안 됨</div>
+    </div>
     <div class="sec"><h2>백업 / 복원</h2></div>
     <div class="card">
-      <div class="sub" style="margin-bottom:14px">데이터는 이 기기(브라우저)에만 저장됩니다. 기기 변경·초기화에 대비해 가끔 내보내세요. (구글시트 동기화는 곧 추가 예정)</div>
+      <div class="sub" style="margin-bottom:14px">데이터는 이 기기(브라우저)에 저장되고, 동기화를 켜면 구글시트에도 보관됩니다. 기기 변경에 대비해 가끔 내보내세요.</div>
       <button class="btn block" id="exportBtn" style="margin-bottom:8px">내보내기 · JSON</button>
       <button class="btn block" id="importBtn" style="margin-bottom:8px">불러오기 · JSON</button>
       <input type="file" id="importFile" accept="application/json" style="display:none">
       <button class="btn block ghost danger" id="resetBtn">전체 초기화</button>
     </div>
-    <div class="mini" style="text-align:center">운동일지 v1 · 로컬 저장</div>
+    <div class="mini" style="text-align:center">운동일지 v1.1 · 로컬 + 구글시트 동기화</div>
   </section>
 </main>
 
@@ -431,7 +443,7 @@ const DEFAULT_EX=[
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.exercises)return d;}catch(e){}
   return {exercises:DEFAULT_EX.slice(),routines:[],sessions:[]};}
 let DB=load();
-function save(){localStorage.setItem(KEY,JSON.stringify(DB));}
+function save(){DB.updatedAt=Date.now();localStorage.setItem(KEY,JSON.stringify(DB));if(typeof syncAfterSave==="function")syncAfterSave();}
 const exById=id=>DB.exercises.find(e=>e.id===id);
 const exName=id=>{const e=exById(id);return e?e.name:"(삭제된 운동)";};
 let draft=newDraft();
@@ -771,10 +783,72 @@ function applyTheme(t){
 $("#themeRow").querySelectorAll("button").forEach(b=>b.onclick=()=>{localStorage.setItem(TKEY,b.dataset.t);applyTheme(b.dataset.t);
   if($("#view-progress").classList.contains("active"))renderProgress();});
 
+/* ===== 구글시트 동기화 (Apps Script 웹앱) ===== */
+const SKEY="workoutlog.sync";
+function syncCfg(){try{return Object.assign({url:"",token:"",auto:true,lastAt:0},JSON.parse(localStorage.getItem(SKEY)||"{}"));}catch(e){return {url:"",token:"",auto:true,lastAt:0};}}
+function syncCfgSave(c){localStorage.setItem(SKEY,JSON.stringify(c));}
+const syncReady=()=>{const c=syncCfg();return !!(c.url&&c.token);};
+function syncStatus(msg,ok){const s=$("#syncStatus");if(!s)return;s.textContent=msg;s.style.color=ok===false?"var(--danger,#d33)":"";}
+async function syncApi(action,payload){
+  const c=syncCfg();if(!c.url||!c.token)throw new Error("설정 없음");
+  const ctrl=new AbortController();const tm=setTimeout(()=>ctrl.abort(),20000);
+  try{
+    let res;
+    if(action==="push"){res=await fetch(c.url,{method:"POST",body:JSON.stringify({token:c.token,action,db:payload}),headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow",signal:ctrl.signal});}
+    else{const u=new URL(c.url);u.searchParams.set("token",c.token);u.searchParams.set("action",action);u.searchParams.set("_",Date.now());res=await fetch(u,{redirect:"follow",signal:ctrl.signal});}
+    const j=await res.json();if(!j.ok)throw new Error(j.error||"응답 오류");return j;
+  }finally{clearTimeout(tm);}
+}
+function rerenderAll(){draft=newDraft();refreshPickers();fillMetricOptions();resetLogUI();renderWeekly();
+  if($("#view-routine").classList.contains("active")){renderRoutines();renderExLib();}
+  if($("#view-progress").classList.contains("active"))renderProgress();
+  if($("#view-history").classList.contains("active"))renderCalendar();}
+let syncBusy=false,syncTimer=null;
+async function syncPush(quiet){
+  if(!syncReady()||syncBusy)return false;syncBusy=true;syncStatus("올리는 중…");
+  try{const j=await syncApi("push",DB);const c=syncCfg();c.lastAt=Date.now();syncCfgSave(c);
+    syncStatus(`올림 · ${fmtSyncTime(c.lastAt)} · 세션 ${j.counts.sessions}개`);if(!quiet)toast("시트에 올렸어요");return true;}
+  catch(e){syncStatus("올리기 실패: "+(e.name==="AbortError"?"시간 초과":e.message),false);if(!quiet)toast("올리기 실패");return false;}
+  finally{syncBusy=false;}
+}
+async function syncPull(quiet){
+  if(!syncReady()||syncBusy)return false;syncBusy=true;syncStatus("가져오는 중…");
+  try{const j=await syncApi("pull");const d=j.db;if(!d||!d.exercises)throw new Error("시트에 데이터 없음");
+    if(!d.exercises.length&&!d.sessions.length){syncStatus("시트가 비어 있어요. 먼저 '지금 올리기'를 누르세요",false);if(!quiet)toast("시트가 비어 있어요");return false;}
+    DB=d;localStorage.setItem(KEY,JSON.stringify(DB));rerenderAll();
+    const c=syncCfg();c.lastAt=Date.now();syncCfgSave(c);syncStatus(`가져옴 · ${fmtSyncTime(c.lastAt)} · 세션 ${DB.sessions.length}개`);if(!quiet)toast("시트에서 가져왔어요");return true;}
+  catch(e){syncStatus("가져오기 실패: "+(e.name==="AbortError"?"시간 초과":e.message),false);if(!quiet)toast("가져오기 실패");return false;}
+  finally{syncBusy=false;}
+}
+function syncAfterSave(){const c=syncCfg();if(!c.auto||!syncReady())return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>syncPush(true),1500);}
+async function syncOnOpen(){
+  if(!syncReady()||!navigator.onLine)return;
+  try{const j=await syncApi("meta");const remote=+j.updatedAt||0,local=+DB.updatedAt||0;
+    if(remote>local){await syncPull(true);toast("시트의 최신 기록을 가져왔어요");}
+    else if(local>remote){await syncPush(true);}
+    else syncStatus(`동기화됨 · ${fmtSyncTime(syncCfg().lastAt)}`);
+  }catch(e){syncStatus("연결 실패: "+e.message,false);}
+}
+function fmtSyncTime(t){if(!t)return"-";const d=new Date(t);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;}
+function syncBindUI(){
+  const c=syncCfg();$("#syncUrl").value=c.url;$("#syncToken").value=c.token;$("#syncAuto").checked=!!c.auto;
+  if(syncReady())syncStatus(c.lastAt?`마지막 동기화 · ${fmtSyncTime(c.lastAt)}`:"설정됨 · 아직 동기화 전");
+  const read=()=>{const n=syncCfg();n.url=$("#syncUrl").value.trim();n.token=$("#syncToken").value.trim();n.auto=$("#syncAuto").checked;syncCfgSave(n);return n;};
+  $("#syncSave").onclick=()=>{read();toast("동기화 설정 저장");syncStatus(syncReady()?"설정됨 · 연결 테스트를 눌러 확인":"연결 안 됨");};
+  $("#syncAuto").onchange=read;
+  $("#syncTest").onclick=async()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}syncStatus("연결 확인 중…");
+    try{const j=await syncApi("meta");syncStatus(`연결 성공 · 시트 최종 저장 ${j.updatedAt?fmtSyncTime(j.updatedAt):"없음"}`);toast("연결 성공");}
+    catch(e){syncStatus("연결 실패: "+e.message,false);toast("연결 실패");}};
+  $("#syncPush").onclick=()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}syncPush(false);};
+  $("#syncPull").onclick=()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}
+    if(!confirm("시트 내용으로 이 기기의 데이터를 교체합니다. 계속할까요?"))return;syncPull(false);};
+}
+
 /* ===== 초기화 ===== */
 function init(){
   applyTheme(localStorage.getItem(TKEY)||"system");
   refreshPickers();fillMetricOptions();renderLog();renderWeekly();
+  syncBindUI();syncOnOpen();
 }
 init();
 </script>
