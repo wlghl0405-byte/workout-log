@@ -1,13 +1,14 @@
 {
  "source": "https://third-hail-d47.notion.site/89a7ddebdcb18235837d010de4fe115e",
  "spaceId": "02dd120e-935c-4d8e-94f8-a202dc1063aa",
- "fetchedAt": "2026-11-18T08:09:56.740Z",
+ "fetchedAt": "2026-11-19T02:16:07.891Z",
  "pages": [
   {
    "id": "b377ddebdcb18206b8b8818d918e8097",
    "title": "8/25 운동 기록 (전신)",
    "date": "2026-08-25",
    "order": 1,
+   "comments": [],
    "exercises": [
     {
      "raw": "벤치 프레스 - 30kg",
@@ -100,6 +101,7 @@
    "title": "8/27 운동기록 (하체)",
    "date": "2026-08-27",
    "order": 2,
+   "comments": [],
    "exercises": [
     {
      "raw": "런지",
@@ -180,6 +182,7 @@
    "title": "8/31 운동 기록 (전신)",
    "date": "2026-08-31",
    "order": 3,
+   "comments": [],
    "exercises": [
     {
      "raw": "어시스트 풀업(등) - 60kg",
@@ -248,6 +251,7 @@
    "title": "9/10 운동 기록 (상체)",
    "date": "2026-09-10",
    "order": 4,
+   "comments": [],
    "exercises": [
     {
      "raw": "펙 덱 플라이",
@@ -328,6 +332,7 @@
    "title": "9/15 운동 기록 (등)",
    "date": "2026-09-15",
    "order": 5,
+   "comments": [],
    "exercises": [
     {
      "raw": "어시스트 풀업",
@@ -401,6 +406,7 @@
    "title": "9/18 운동 기록 (가슴.어깨)",
    "date": "2026-09-18",
    "order": 6,
+   "comments": [],
    "exercises": [
     {
      "raw": "Y레이즈 웜업",
@@ -481,6 +487,7 @@
    "title": "9/22 운동 기록 (어깨)",
    "date": "2026-09-22",
    "order": 7,
+   "comments": [],
    "exercises": [
     {
      "raw": "바벨 오버헤드 숄더 프레스 (O.H.P) - 15kg",
@@ -561,6 +568,7 @@
    "title": "9/26 운동 기록 (등)",
    "date": "2026-09-26",
    "order": 8,
+   "comments": [],
    "exercises": [
     {
      "raw": "밴드 풀업",
@@ -629,6 +637,7 @@
    "title": "9/30 운동 기록 (가슴)",
    "date": "2026-09-30",
    "order": 9,
+   "comments": [],
    "exercises": [
     {
      "raw": "행 데드 + 케이블 페이스풀",
@@ -714,6 +723,7 @@
    "title": "10/5 운동 기록 (등)",
    "date": "2026-10-05",
    "order": 10,
+   "comments": [],
    "exercises": [
     {
      "raw": "암 풀 다운 (Straight-Arm Pulldown)",
@@ -806,6 +816,7 @@
    "title": "10/9 운동 기록 (어깨)",
    "date": "2026-10-09",
    "order": 11,
+   "comments": [],
    "exercises": [
     {
      "raw": "밴드 웜업 (Resistance Band Warm-Up)",
@@ -898,6 +909,7 @@
    "title": "10/13 운동 기록 (등)",
    "date": "2026-10-13",
    "order": 12,
+   "comments": [],
    "exercises": [
     {
      "raw": "슈러그 (Shrug)",
@@ -990,6 +1002,7 @@
    "title": "10/15 운동 기록 (하체, 팔)",
    "date": "2026-10-15",
    "order": 13,
+   "comments": [],
    "exercises": [
     {
      "raw": "레그 익스텐션 (Leg Extension)",
@@ -1058,6 +1071,7 @@
    "title": "10/21 운동 기록 (등, 어깨)",
    "date": "2026-10-21",
    "order": 14,
+   "comments": [],
    "exercises": [
     {
      "raw": "데드리프트 (Deadlift)",
@@ -1138,6 +1152,7 @@
    "title": "10/29 운동 기록 (등)",
    "date": "2026-10-29",
    "order": 15,
+   "comments": [],
    "exercises": [
     {
      "raw": "밴드 풀업 (Band-assisted Pull-up)",
@@ -1218,6 +1233,7 @@
    "title": "11/4 운동 기록 (가슴,어깨,이두)",
    "date": "2026-11-04",
    "order": 16,
+   "comments": [],
    "exercises": [
     {
      "raw": "벤치 프레스 (Barbell Bench Press)",
@@ -1280,6 +1296,7 @@
    "title": "11/7 운동 기록 (등,팔)",
    "date": "2026-11-07",
    "order": 17,
+   "comments": [],
    "exercises": [
     {
      "raw": "암 풀 다운 (Straight-Arm Pulldown)",
@@ -1396,6 +1413,7 @@
    "title": "11/11 운동 기록 (어깨)",
    "date": "2026-11-11",
    "order": 18,
+   "comments": [],
    "exercises": [
     {
      "raw": "덤벨 사레레 (Dumbbell Lateral Raise)",
@@ -1470,6 +1488,7 @@
    "title": "11/14 운동 기록 (팔)",
    "date": "2026-11-14",
    "order": 19,
+   "comments": [],
    "exercises": [
     {
      "raw": "점프 풀업 (Jump Pull-up)",

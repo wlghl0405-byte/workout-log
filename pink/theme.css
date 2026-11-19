@@ -1,0 +1,4 @@
+/* pink 버전 강조색 (build-variant.js 가 생성) */
+:root{--accent:#E8639A;--accent-ink:#FFFFFF;--accent-soft:#FDEDF3;--accent-line:#F5C6D8;--sat:#E8639A}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--accent:#F48FB6;--accent-ink:#2A0F1B;--accent-soft:#3A1F2C;--accent-line:#6A3650;--sat:#F48FB6}}
+:root[data-theme="dark"]{--accent:#F48FB6;--accent-ink:#2A0F1B;--accent-soft:#3A1F2C;--accent-line:#6A3650;--sat:#F48FB6}

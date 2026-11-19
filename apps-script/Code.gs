@@ -1,7 +1,9 @@
-// 운동일지 구글시트 동기화 웹앱 v2
-// v2 추가: exercises 열(part·equip·key), notionSync(선생님 노션 수업기록 읽기), notionFile(영상·사진 서명 URL)
+// 운동일지 구글시트 동기화 웹앱 v3
+// v2: exercises 열(part·equip·key), notionSync(선생님 노션 수업기록 읽기), notionFile(영상·사진 서명 URL)
+// v3: 요청마다 sheet 파라미터(스프레드시트 ID)로 다른 시트를 고를 수 있음 → 스크립트 하나로 앱 여러 개(각자 시트) 운용.
+//     비어 있으면 이 스크립트가 붙은 시트를 쓴다(기존 동작 그대로). 다른 시트는 이 계정이 편집할 수 있어야 한다.
 var TOKEN = 'CHANGE-ME';
-var VER = 2;
+var VER = 3;
 
 // 노션 공개 페이지(선생님 수업기록). 바뀌면 여기만 수정.
 var NOTION_SITE = 'https://third-hail-d47.notion.site';
@@ -18,6 +20,13 @@ var SHEETS = {
   meta: ['key', 'value']
 };
 
+// 이번 요청이 쓸 스프레드시트 ID(doGet/doPost 에서 설정). 비어 있으면 스크립트가 붙은 시트.
+var SHEET_ID = '';
+function ss() {
+  if (SHEET_ID) return SpreadsheetApp.openById(SHEET_ID);
+  return SpreadsheetApp.getActive();
+}
+
 function isJsonCol(name, col) {
   if (name === 'sessions' && col === 'entries') return true;
   if (name === 'routines' && col === 'items') return true;
@@ -31,10 +40,10 @@ function out(obj) {
 }
 
 function sheet(name) {
-  var ss = SpreadsheetApp.getActive();
-  var sh = ss.getSheetByName(name);
+  var s = ss();
+  var sh = s.getSheetByName(name);
   if (!sh) {
-    sh = ss.insertSheet(name);
+    sh = s.insertSheet(name);
     sh.appendRow(SHEETS[name]);
     sh.setFrozenRows(1);
   }
@@ -154,7 +163,7 @@ function richText(t) {
   return s;
 }
 
-// 영상·사진 서명 URL(약 1시간 유효)
+// 영상·사진 서명 URL(약 1시간 유효). 공개 페이지라면 어느 회원 기록이든 같은 방식으로 받는다.
 function notionFile(block, src) {
   var r = notionPost('getSignedFileUrls', { urls: [{ url: src, permissionRecord: { table: 'block', id: dashId(block) } }] });
   var u = r.signedUrls && r.signedUrls[0];
@@ -163,6 +172,7 @@ function notionFile(block, src) {
 }
 
 // 수업기록 전체 → {pages:[{id,title,date,order,exercises:[{raw,weight,note,media:[{type,block,src}]}]}]}
+// (앱에서는 더 이상 쓰지 않고, 내장 데이터는 tools/notion-sync.js 로 만든다. 필요하면 수동 호출용으로 남겨 둠)
 function notionSync() {
   var first = notionPost('loadPageChunk', { pageId: NOTION_DB_PAGE, limit: 50, cursor: { stack: [] }, chunkNumber: 0, verticalColumns: false });
   var spaceId = first.recordMap.block[NOTION_DB_PAGE].spaceId;
@@ -214,8 +224,9 @@ function notionSync() {
 function doGet(e) {
   var p = e.parameter || {};
   if (p.token !== TOKEN) return out({ ok: false, error: 'bad token' });
+  SHEET_ID = String(p.sheet || '').trim();
   try {
-    if (p.action === 'meta') return out({ ok: true, updatedAt: Number(getMeta().updatedAt) || 0, ver: VER });
+    if (p.action === 'meta') return out({ ok: true, updatedAt: Number(getMeta().updatedAt) || 0, ver: VER, sheet: ss().getName() });
     if (p.action === 'pull') return out(pull());
     if (p.action === 'notionSync') return out(notionSync());
     if (p.action === 'notionFile') return out(notionFile(p.block, p.src));
@@ -229,6 +240,7 @@ function doPost(e) {
   var body = {};
   try { body = JSON.parse(e.postData.contents); } catch (err) { return out({ ok: false, error: 'bad json' }); }
   if (body.token !== TOKEN) return out({ ok: false, error: 'bad token' });
+  SHEET_ID = String(body.sheet || '').trim();
   try {
     if (body.action === 'push') return out(push(body.db || {}));
     if (body.action === 'pull') return out(pull());

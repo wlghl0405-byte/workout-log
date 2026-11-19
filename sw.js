@@ -1,5 +1,5 @@
 /* 운동일지 서비스 워커: 오프라인 실행 + 홈 화면 앱 */
-const VER = "wl-2.0.0";
+const VER = "wl-2.1.0";
 const SHELL = ["./", "./index.html", "./catalog.js", "./data/tips.json", "./manifest.webmanifest", "./apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/maskable-512.png"];
 
 self.addEventListener("install", (e) => {

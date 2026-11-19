@@ -198,19 +198,6 @@ nav button svg{width:23px;height:23px;stroke-width:1.9}
 nav button.on{color:var(--accent)}
 nav button.on svg{stroke-width:2.2}
 
-/* 휴식 타이머 바 */
-.restbar{position:fixed;left:12px;right:12px;bottom:calc(66px + var(--safe-b));z-index:35;background:var(--ink);color:var(--bg);border-radius:16px;padding:10px 12px 10px 14px;
-  display:none;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.3);overflow:hidden}
-.restbar.on{display:flex}
-.restbar .bar{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--accent) 45%,transparent);width:0%;transition:width .5s linear}
-.restbar>*{position:relative}
-.restbar .t{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;min-width:64px}
-.restbar .lab{font-size:12px;font-weight:600;opacity:.8;flex:1}
-.restbar button{background:rgba(255,255,255,.14);color:inherit;border-radius:10px;padding:8px 10px;font-size:12.5px;font-weight:700}
-.restbar.over{background:var(--good);color:#fff}
-body.resting .savebar{bottom:calc(142px + var(--safe-b))}
-body.resting .toast{bottom:calc(150px + var(--safe-b))}
-
 /* ---------- 라이브러리 ---------- */
 .lib-head{position:sticky;top:calc(57px + env(safe-area-inset-top,0px));z-index:5;background:var(--bg);padding:4px 0 8px}
 .grp{font-size:12px;font-weight:700;color:var(--ink-2);margin:14px 4px 6px;display:flex;align-items:center;gap:6px}
@@ -298,11 +285,11 @@ body.resting .toast{bottom:calc(150px + var(--safe-b))}
 .steps{counter-reset:s;padding-left:0;list-style:none;margin:0}
 .steps li{position:relative;padding-left:30px;margin-bottom:9px;font-size:13.5px;line-height:1.5;color:var(--ink)}
 .steps li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-size:11.5px;font-weight:750;display:flex;align-items:center;justify-content:center}
-.rt-item{display:grid;grid-template-columns:1fr 62px 62px 64px 34px;gap:6px;align-items:center;margin-bottom:7px}
+.rt-item{display:grid;grid-template-columns:1fr 62px 62px 34px;gap:6px;align-items:center;margin-bottom:7px}
 .rt-item .nm{font-size:14px;font-weight:650;line-height:1.25;min-width:0}
 .rt-item .nm small{display:block;color:var(--muted);font-size:11px;font-weight:600}
 .rt-item input{height:40px;padding:0 4px;font-size:14.5px}
-.rt-h{display:grid;grid-template-columns:1fr 62px 62px 64px 34px;gap:6px;padding:0 2px;margin-bottom:5px}
+.rt-h{display:grid;grid-template-columns:1fr 62px 62px 34px;gap:6px;padding:0 2px;margin-bottom:5px}
 .rt-h span{font-size:11px;color:var(--muted);font-weight:600;text-align:center}
 .rt-h span:first-child{text-align:left}
 .ord{display:flex;flex-direction:column;gap:2px}
@@ -415,52 +402,25 @@ body.resting .toast{bottom:calc(150px + var(--safe-b))}
 
   <!-- ============ 설정 ============ -->
   <section class="view" id="view-settings">
-    <div class="sec"><h2>운동 중</h2></div>
-    <div class="card">
-      <label class="fld">기본 휴식 시간</label>
-      <div class="seg sm" id="restSeg"><button data-r="60">60초</button><button data-r="90">90초</button><button data-r="120">120초</button><button data-r="180">180초</button></div>
-      <div class="fldrow" style="margin-top:12px;gap:14px">
-        <label class="fldrow" style="gap:7px;font-size:13.5px"><input type="checkbox" id="optSound">끝나면 소리</label>
-        <label class="fldrow" style="gap:7px;font-size:13.5px"><input type="checkbox" id="optVib">진동</label>
-      </div>
-      <div class="mini" style="margin-top:8px">세트를 완료(체크)하면 휴식 타이머가 자동으로 시작됩니다. 루틴 편집에서 종목별 휴식 시간을 따로 둘 수 있습니다.</div>
-    </div>
-
     <div class="sec"><h2>테마</h2></div>
     <div class="card">
       <div class="seg sm" id="themeRow"><button data-t="system">시스템</button><button data-t="light">라이트</button><button data-t="dark">다크</button></div>
     </div>
 
-    <div class="sec"><h2>아이폰 앱으로 설치</h2></div>
-    <div class="card" id="installCard">
-      <ol class="steps">
-        <li><b>Safari</b>로 이 페이지를 열어 주세요 (카톡 브라우저 말고요). 아래 「주소 복사」를 눌러 Safari 주소창에 붙여넣으면 됩니다.</li>
-        <li>하단 <b>공유</b> 버튼 → <b>홈 화면에 추가</b> → 추가를 누르세요.</li>
-        <li>홈 화면의 <b>운동일지</b> 아이콘으로 실행하세요. 전체 화면 앱처럼 열리고, 카톡과 상관없이 쓸 수 있어요.</li>
-        <li>아래 「동기화 설정 주소 복사」로 복사한 주소를 Safari(홈 화면 앱)에서 한 번 열면 구글시트 설정이 넘어가고, 기록이 그대로 내려와요.</li>
-      </ol>
-      <div class="row-btns" style="margin-top:12px"><button class="btn sm" id="copyUrl" style="flex:1">주소 복사</button><button class="btn sm" id="copyCfg" style="flex:1">동기화 설정 주소 복사</button></div>
-      <div class="mini" id="installState" style="margin-top:8px"></div>
-    </div>
-
-    <div class="sec"><h2>구글시트 동기화</h2></div>
+    <div class="sec"><h2>구글 시트 DB 동기화</h2></div>
     <div class="card">
-      <div class="sub" style="margin-bottom:12px">저장할 때마다 시트에 올리고, 앱을 열 때 시트가 더 최신이면 가져옵니다. 설정 방법은 저장소의 SHEETS_SYNC_SETUP.md를 참고하세요.</div>
+      <div class="sub" style="margin-bottom:12px">저장할 때마다 시트에 올리고, 앱을 열 때 시트가 더 최신이면 가져옵니다.</div>
       <label class="fld" for="syncUrl">웹앱 URL</label>
       <input type="text" id="syncUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" autocapitalize="off" spellcheck="false" style="margin-bottom:10px">
       <label class="fld" for="syncToken">토큰</label>
-      <input type="text" id="syncToken" placeholder="Apps Script의 TOKEN 값" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <input type="text" id="syncToken" placeholder="Apps Script의 TOKEN 값" autocomplete="off" autocapitalize="off" spellcheck="false" style="margin-bottom:10px">
+      <label class="fld" for="syncSheet">스프레드시트 ID <span class="mini" style="font-weight:500">· 비우면 스크립트가 붙은 시트</span></label>
+      <input type="text" id="syncSheet" placeholder="시트 주소의 /d/ 와 /edit 사이 문자열" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div class="mini" style="margin:6px 2px 0">같은 스크립트로 다른 시트에 기록할 때 넣어요 (스크립트 v3 이상).</div>
       <div class="fldrow" style="margin:10px 0 6px"><button class="btn sm" id="syncSave" style="flex:1">저장</button><button class="btn sm" id="syncTest" style="flex:1">연결 테스트</button></div>
       <div class="fldrow" style="margin-bottom:10px"><button class="btn sm" id="syncPush" style="flex:1">지금 올리기</button><button class="btn sm" id="syncPull" style="flex:1">시트에서 가져오기</button></div>
       <label class="fldrow" style="gap:8px;font-size:13.5px"><input type="checkbox" id="syncAuto" checked>저장할 때 자동으로 올리기</label>
       <div class="mini" id="syncStatus" style="margin-top:8px">아직 연결되지 않았어요</div>
-    </div>
-
-    <div class="sec"><h2>PT 수업 기록 (노션)</h2></div>
-    <div class="card">
-      <div class="sub">선생님이 노션에 올린 영상·코멘트를 종목별 「팁」에 연결합니다. 새 수업이 올라오면 새로고침하세요(Apps Script v2 필요).</div>
-      <div class="row-btns" style="margin-top:12px"><button class="btn sm" id="tipsRefresh" style="flex:1">노션에서 새로고침</button><button class="btn sm ghost" id="tipsReset" style="flex:1">기본 데이터로</button></div>
-      <div class="mini" id="tipsState" style="margin-top:8px"></div>
     </div>
 
     <div class="sec"><h2>데이터</h2></div>
@@ -471,12 +431,11 @@ body.resting .toast{bottom:calc(150px + var(--safe-b))}
       <input type="file" id="importFile" accept="application/json" style="display:none">
       <button class="btn block ghost danger" id="resetBtn">전체 초기화</button>
     </div>
-    <div class="mini" style="text-align:center" id="verLine">운동일지 v2.0</div>
+    <div class="mini" style="text-align:center" id="verLine">운동일지</div>
   </section>
 </main>
 
 <nav id="tabbar"></nav>
-<div class="restbar" id="restbar"><div class="bar" id="restFill"></div><div class="t num" id="restT">1:30</div><div class="lab" id="restLab">휴식</div><button id="restPlus">+30초</button><button id="restSkip">건너뛰기</button></div>
 <div class="toast" id="toast"></div>
 <div class="sheet-bg" id="sheetBg"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div class="sh"><h3 id="sheetTitle"></h3><button class="btn icon sm ghost" id="sheetClose" aria-label="닫기"></button></div><div class="sbody" id="sheetBody"></div></div>
@@ -484,7 +443,7 @@ body.resting .toast{bottom:calc(150px + var(--safe-b))}
 <script src="catalog.js"></script>
 <script>
 "use strict";
-const APP_VER="2.0.0";
+const APP_VER="2.1.0";
 /* ===== 아이콘 ===== */
 const S=(p,sw)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||1.75}" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 const IC={
@@ -548,10 +507,13 @@ function metricVal(metric,sets){
 }
 
 /* ===== 저장소 ===== */
-const KEY="workoutlog.v1",TKEY="workoutlog.theme",OKEY="workoutlog.opts",TIPKEY="workoutlog.tips";
+// 변형 앱(pink/ 등)은 로드 전에 window.WL_VARIANT 로 저장소 이름·팁 파일·프리셋·기본 종목을 바꿔 끼운다. 기본 앱은 그대로.
+const V=window.WL_VARIANT||{};const NS="workoutlog."+(V.id?V.id+".":"");
+const KEY=NS+"v1",TKEY=NS+"theme",OKEY=NS+"opts",SKEY=NS+"sync";
+const PRESETS=V.presets||C.PRESETS,PROGRAMS=V.programs||C.PROGRAMS;
 const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3);
 const todayISO=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);};
-function defaultExercises(){return ["barbell_squat","deadlift","bench_press","barbell_ohp","lat_pulldown","barbell_row","leg_press","plank","running"].map(k=>exFromCatalog(k));}
+function defaultExercises(){return (V.defaults||["barbell_squat","deadlift","bench_press","barbell_ohp","lat_pulldown","barbell_row","leg_press","plank","running"]).filter(k=>C.byKey[k]).map(k=>exFromCatalog(k));}
 function exFromCatalog(k){const c=C.byKey[k];return {id:uid(),name:c.name,key:k,part:c.part,equip:c.equip,unit:c.unit};}
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.exercises){const before=d.version||1;const m=migrate(d);if(m.version!==before)localStorage.setItem(KEY,JSON.stringify(m));return m;}}catch(e){}
   return migrate({exercises:defaultExercises(),routines:[],sessions:[],version:2});}
@@ -598,7 +560,7 @@ function migrate(db){
 }
 
 /* ===== 옵션 ===== */
-function opts(){try{return Object.assign({rest:90,sound:true,vib:true,libSort:"part"},JSON.parse(localStorage.getItem(OKEY)||"{}"));}catch(e){return {rest:90,sound:true,vib:true,libSort:"part"};}}
+function opts(){try{return Object.assign({libSort:"part"},JSON.parse(localStorage.getItem(OKEY)||"{}"));}catch(e){return {libSort:"part"};}}
 function setOpt(k,v){const o=opts();o[k]=v;localStorage.setItem(OKEY,JSON.stringify(o));}
 
 /* ===== 유틸 ===== */
@@ -643,25 +605,14 @@ function openSheet(title,bodyEl,onClose){$("#sheetTitle").innerHTML=title;const 
 function closeSheet(){$("#sheet").classList.remove("on");$("#sheetBg").classList.remove("on");document.body.style.overflow="";const v=$("#sheetBody video");if(v)v.pause();if(sheetOnClose){const f=sheetOnClose;sheetOnClose=null;f();}}
 $("#sheetBg").onclick=closeSheet;$("#sheetClose").onclick=closeSheet;
 
-/* ===== 팁(노션) 데이터 ===== */
+/* ===== 팁(PT 수업 기록) 데이터: tools/notion-sync.js → build-tips.js 로 만든 내장 파일 ===== */
 let TIPS={tips:{},unmatched:[]};
 function tipsFor(ex){if(!ex||!ex.key)return null;return TIPS.tips[ex.key]||null;}
 function hasTip(ex){const t=tipsFor(ex);return !!(t&&(t.notes.length||t.media.length))||!!(ex.key&&C.byKey[ex.key]);}
 async function loadTips(){
-  try{const c=JSON.parse(localStorage.getItem(TIPKEY));if(c&&c.tips){TIPS=c;}}catch(e){}
-  try{const r=await fetch("data/tips.json",{cache:"no-cache"});if(r.ok){const j=await r.json();if(!TIPS.builtAt||(j.builtAt>TIPS.builtAt&&!TIPS.fromNotion)){TIPS=j;localStorage.setItem(TIPKEY,JSON.stringify(TIPS));}}}catch(e){}
-  renderTipsState();
+  try{const r=await fetch(V.tips||"data/tips.json",{cache:"no-cache"});if(r.ok)TIPS=await r.json();}catch(e){}
+  if(curView==="lib")renderExLib();
 }
-function buildTips(notion){ // tools/build-tips.js 와 동일
-  const tips={};const unmatched=[];const get=k=>(tips[k]=tips[k]||{key:k,name:C.byKey[k].name,notes:[],weights:[],media:[]});
-  for(const p of notion.pages)for(const ex of p.exercises){const keys=C.matchAll(ex.raw);if(!keys.length){unmatched.push({page:p.title,raw:ex.raw});continue;}
-    const w=C.parseWeight(ex.weight)??C.parseWeight(ex.raw);const wText=ex.weight||(ex.raw.includes(" - ")?ex.raw.split(" - ").slice(1).join(" - "):"");
-    keys.forEach((k,i)=>{const t=get(k);if(ex.note)t.notes.push({date:p.date,text:ex.note,page:p.id});if(w!=null||wText)t.weights.push({date:p.date,kg:w,text:wText});
-      const med=keys.length>1&&ex.media.length===keys.length?[ex.media[i]]:ex.media;med.forEach(m=>t.media.push({date:p.date,type:m.type,block:m.block,src:m.src,page:p.id,title:p.title}));});}
-  for(const k in tips){const t=tips[k];t.notes.sort((a,b)=>b.date.localeCompare(a.date));const seen=new Set();t.notes=t.notes.filter(n=>{const s=n.text.replace(/\s+/g,"");if(seen.has(s))return false;seen.add(s);return true;});t.weights.sort((a,b)=>a.date.localeCompare(b.date));t.media.sort((a,b)=>b.date.localeCompare(a.date));}
-  return {builtAt:new Date().toISOString(),source:notion.source,fetchedAt:notion.fetchedAt,spaceId:notion.spaceId,tips,unmatched,fromNotion:true};
-}
-function renderTipsState(){const s=$("#tipsState");if(!s)return;const n=Object.keys(TIPS.tips||{}).length;s.textContent=n?`종목 ${n}개 · 수업 기록 ${TIPS.fetchedAt?fmtSyncTime(Date.parse(TIPS.fetchedAt)):"-"} 기준${TIPS.fromNotion?" · 노션에서 직접 받은 데이터예요":" · 내장 데이터예요"}`:"팁 데이터가 없어요";}
 const NOTION_SITE="https://third-hail-d47.notion.site";
 const notionLink=(page,block)=>`${NOTION_SITE}/${page}${block?"#"+block:""}`;
 
@@ -682,7 +633,7 @@ function openTip(exId){
   if(t.media.length){
     b.innerHTML+=`<div class="tip-sec"><h4>수업 영상 · 사진 <span class="mini">(${t.media.length})</span></h4><div class="player" id="player" style="display:none"></div>
       <div class="medias">${t.media.map((m,i)=>`<button class="mbtn" data-m="${i}">${m.type==="video"?IC.playc:IC.photo}<span>${fmtDate(m.date)}<small>${m.type==="video"?"영상":"사진"} · ${esc(m.title.replace(/운동\s?기록/,"").trim())}</small></span></button>`).join("")}</div>
-      <div class="mini" style="margin-top:8px">${syncReady()?"영상은 앱 안에서 바로 재생됩니다. 안 되면 노션에서 열립니다.":"구글시트 동기화(Apps Script v2)를 연결하면 앱 안에서 재생됩니다. 지금은 노션으로 열립니다."}</div></div>`;
+      <div class="mini" style="margin-top:8px">${syncReady()?"영상은 앱 안에서 바로 재생됩니다. 안 되면 노션에서 열립니다.":"구글 시트 DB 동기화를 연결하면 앱 안에서 재생됩니다. 지금은 노션으로 열립니다."}</div></div>`;
   }
   if(t.notes.length||t.media.length){const pg=(t.notes[0]||t.media[0]).page;b.innerHTML+=`<div style="margin-top:14px"><a class="lnk" href="${notionLink(pg)}" target="_blank" rel="noopener">${IC.ext.replace("<svg",'<svg style="width:13px;height:13px;display:inline-block;vertical-align:-2px"')} 노션 수업 기록 열기</a></div>`;}
   if(!t.notes.length&&!t.media.length&&!(c&&c.desc))b.innerHTML+=`<div class="empty"><div class="t">아직 이 종목의 팁이 없어요</div><div class="h">종목을 표준 이름으로 바꾸면 PT 메모가 연결됩니다</div></div>`;
@@ -734,7 +685,7 @@ function renderLog(){
     const ex=exById(en.exerciseId),uk=ukOf(ex),fields=UNITS[uk].fields,card=el("div","card"),last=lastPerf(en.exerciseId),ol=overload(en.exerciseId),it=routineItemFor(en.exerciseId);
     const cols=`34px ${fields.map(()=>"1fr").join(" ")} 34px`;
     const lastHtml=last?`<span class="tag">지난 기록</span> <b>${setSummary(uk,topSet(uk,last.sets))}</b> · ${fmtDate(last.date)}${last.sets.length>1?` · ${last.sets.length}세트`:""}`:`<span class="tag">첫 기록</span>`;
-    const target=it?`<span class="chip acc">${it.targetSets||3}×${it.targetReps||15}${it.rest?` · ${it.rest}초`:""}</span>`:"";
+    const target=it?`<span class="chip acc">${it.targetSets||3}×${it.targetReps||15}</span>`:"";
     card.innerHTML=`<div class="exhead"><div class="l"><div class="nm">${esc(ex?ex.name:"?")}</div><div class="chipsrow">${ex?chipsOf(ex):""}${target}</div></div>
       <div class="row-btns"><button class="btn icon sm ${hasTip(ex)?"soft":"ghost"}" data-tip="${en.exerciseId}" aria-label="팁">${IC.bulb}</button><button class="btn icon sm ghost" data-del="${ei}" aria-label="운동 삭제">${IC.trash}</button></div></div>
       <div class="last">${lastHtml}</div>
@@ -762,7 +713,7 @@ function renderLog(){
   list.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>bump(b.dataset.inc,1));
   list.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>bump(b.dataset.dec,-1));
   list.querySelectorAll("[data-done]").forEach(b=>b.onclick=()=>{const[e,s]=b.dataset.done.split(".");const st=draft.entries[e].sets[s];st.done=!st.done;
-    if(st.done){if(!draft.startedAt)draft.startedAt=Date.now();const it=routineItemFor(draft.entries[e].exerciseId);startRest((it&&it.rest)||opts().rest);}renderLog();});
+    if(st.done&&!draft.startedAt)draft.startedAt=Date.now();renderLog();});
   list.querySelectorAll("[data-rmset]").forEach(b=>b.onclick=()=>{const[e,s]=b.dataset.rmset.split(".");draft.entries[e].sets.splice(s,1);if(!draft.entries[e].sets.length)draft.entries.splice(e,1);renderLog();});
 }
 function syncSessionHeader(){
@@ -789,11 +740,28 @@ function routineLastDate(r){ // 이 루틴(또는 종목 60% 이상 겹치는 �
   DB.sessions.forEach(s=>{const hit=s.routineId===r.id||(ids.size&&s.entries.filter(e=>ids.has(e.exerciseId)).length>=Math.ceil(ids.size*0.6));if(hit&&s.date>best)best=s.date;});
   return best;
 }
+// 오늘 추천: 루틴 이름이 아니라 '부위'를 기준으로 본다. 각 세션에서 실제로 한 종목의 부위를 세어
+// 부위별 마지막 운동일을 구하고, 루틴의 주요 부위 중 가장 최근에 한 날이 가장 오래된 루틴을 고른다.
+// (자유 기록으로 가슴을 했어도 다음 날 가슴 루틴이 또 추천되지 않는다)
+const MAIN_PARTS=["가슴","등","어깨","팔","하체"];
+function partCounts(exIds){const cnt={};exIds.forEach(id=>{const e=exById(id);if(e&&MAIN_PARTS.includes(e.part))cnt[e.part]=(cnt[e.part]||0)+1;});return cnt;}
+function mainParts(cnt){const ps=Object.keys(cnt);if(!ps.length)return [];const top=Math.max(...ps.map(p=>cnt[p]));return ps.filter(p=>cnt[p]>=2||cnt[p]===top).sort((a,b)=>cnt[b]-cnt[a]);}
+function partLastDates(){ // 부위별 마지막 운동일: 그 세션에서 2종목 이상 했거나 가장 많이 한 부위만 '한 것'으로 친다
+  const last={};DB.sessions.forEach(s=>{if(s.id===draft.id)return;mainParts(partCounts(s.entries.map(e=>e.exerciseId))).forEach(p=>{if(!last[p]||s.date>last[p])last[p]=s.date;});});return last;
+}
 function renderSuggest(){
   const box=$("#suggestBox");if(draft.routineId||draft.entries.length||!DB.routines.length){box.style.display="none";return;}
-  const ranked=DB.routines.map(r=>({r,d:routineLastDate(r)})).sort((a,b)=>(a.d||"0").localeCompare(b.d||"0"));
+  const last=partLastDates();
+  const ranked=DB.routines.map(r=>{
+    const parts=mainParts(partCounts(r.items.map(i=>i.exerciseId)));
+    let recent="",fresh="";parts.forEach(p=>{const d=last[p]||"";if(d>recent){recent=d;fresh=p;}});
+    if(!parts.length)recent=routineLastDate(r)||"";
+    return {r,parts,recent,fresh};
+  }).sort((a,b)=>a.recent.localeCompare(b.recent));
   const pick=ranked[0];if(!pick){box.style.display="none";return;}
-  box.style.display="flex";box.innerHTML=`<span>오늘 추천 <b>${esc(pick.r.name)}</b><span class="mini" style="display:block">${pick.d?`마지막 ${fmtDate(pick.d)} · ${daysAgo(pick.d)}일 전`:"아직 안 해본 루틴이에요"}</span></span><button class="btn sm primary" id="sugGo">시작</button>`;
+  const why=pick.recent?`${pick.fresh?pick.fresh+" 운동 ":""}마지막 ${fmtDate(pick.recent)} · ${daysAgo(pick.recent)}일 전`:"아직 안 한 부위예요";
+  const rested=[...new Set(ranked.slice(1).filter(x=>x.recent&&daysAgo(x.recent)<=1).map(x=>x.fresh).filter(Boolean))];
+  box.style.display="flex";box.innerHTML=`<span>오늘 추천 <b>${esc(pick.r.name)}</b><span class="mini" style="display:block">${why}${rested.length?` · 어제 한 부위: ${esc(rested.join("·"))}`:""}</span></span><button class="btn sm primary" id="sugGo">시작</button>`;
   box.querySelector("#sugGo").onclick=()=>applyRoutine(pick.r.id);
 }
 $("#addExBtn").onclick=()=>openPicker(id=>{addEntry(id,3);},draft.entries.map(e=>e.exerciseId));
@@ -807,7 +775,7 @@ $("#saveSession").onclick=()=>{
   if(draft.startedAt)rec.dur=Math.round((Date.now()-draft.startedAt)/60e3);
   const idx=DB.sessions.findIndex(s=>s.id===rec.id);
   if(idx>=0)DB.sessions[idx]=rec;else DB.sessions.push(rec);
-  save();toast(idx>=0?"수정해서 저장했어요":"오늘 운동을 저장했어요");stopRest();
+  save();toast(idx>=0?"수정해서 저장했어요":"오늘 운동을 저장했어요");
   draft=newDraft();resetLogUI();renderWeekly();
 };
 function resetLogUI(){$("#sessionMemo").value="";$("#feelRow").querySelectorAll("button").forEach(x=>x.classList.remove("on"));$("#editingHint").textContent="";renderLog();}
@@ -820,19 +788,6 @@ function renderWeekly(){
   const lastS=DB.sessions.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
   $("#wkLast").textContent=lastS?fmtDate(lastS.date):"—";
 }
-
-/* ===== 휴식 타이머 ===== */
-let restEnd=0,restTotal=0,restTimer=null,restDone=false,audioCtx=null;
-function beep(){if(!opts().sound)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime;[0,0.18,0.36].forEach(o=>{const osc=audioCtx.createOscillator(),g=audioCtx.createGain();osc.frequency.value=880;osc.connect(g);g.connect(audioCtx.destination);g.gain.setValueAtTime(0.0001,t+o);g.gain.exponentialRampToValueAtTime(0.4,t+o+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+o+0.15);osc.start(t+o);osc.stop(t+o+0.16);});}catch(e){}}
-function unlockAudio(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==="suspended")audioCtx.resume();}catch(e){}}
-function startRest(sec){unlockAudio();restTotal=sec;restEnd=Date.now()+sec*1000;restDone=false;$("#restbar").classList.add("on");$("#restbar").classList.remove("over");document.body.classList.add("resting");$("#restLab").textContent="휴식";tickRest();clearInterval(restTimer);restTimer=setInterval(tickRest,250);}
-function stopRest(){clearInterval(restTimer);restTimer=null;restDone=false;$("#restbar").classList.remove("on","over");document.body.classList.remove("resting");}
-function tickRest(){const rem=Math.max(0,Math.ceil((restEnd-Date.now())/1000));$("#restT").textContent=`${Math.floor(rem/60)}:${String(rem%60).padStart(2,"0")}`;
-  $("#restFill").style.width=`${Math.min(100,100-(rem/restTotal)*100)}%`;
-  if(rem<=0&&!restDone){restDone=true;$("#restbar").classList.add("over");$("#restLab").textContent="다음 세트!";beep();if(opts().vib&&navigator.vibrate)navigator.vibrate([200,100,200]);setTimeout(()=>{if(restDone)stopRest();},6000);}}
-$("#restPlus").onclick=()=>{restEnd+=30e3;restTotal+=30;restDone=false;$("#restbar").classList.remove("over");$("#restLab").textContent="휴식";tickRest();};
-$("#restSkip").onclick=stopRest;
-document.addEventListener("visibilitychange",()=>{if(!document.hidden&&restTimer)tickRest();});
 
 /* ===== 종목 선택 시트 ===== */
 function openPicker(onPick,excludeIds,title){
@@ -872,18 +827,18 @@ function renderRoutines(){
   box.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>editRoutine(b.dataset.edit));
   // 추천 루틴
   const pb=$("#presetList");pb.innerHTML="";
-  C.PRESETS.forEach(p=>{const have=DB.routines.find(r=>r.preset===p.id);const c=el("div","card");
+  PRESETS.forEach(p=>{const have=DB.routines.find(r=>r.preset===p.id);const c=el("div","card");
     c.innerHTML=`<div class="chead"><div><h3>${esc(p.name)}</h3><div class="mini" style="margin-top:2px">${p.items.length}종목 · ${esc(p.src)}</div></div>
       <button class="btn sm ${have?"ghost":"soft"}" data-preset="${p.id}">${have?"다시 가져오기":"가져오기"}</button></div>
       <div class="sub">${p.items.map(it=>`${esc(C.byKey[it.key].name)} <span class="mini num">${it.sets}×${it.reps}</span>`).join("&nbsp;&nbsp;·&nbsp;&nbsp;")}</div>`;pb.appendChild(c);});
   pb.querySelectorAll("[data-preset]").forEach(b=>b.onclick=()=>importPreset(b.dataset.preset));
   const gb=$("#programList");gb.innerHTML="";
-  C.PROGRAMS.forEach(p=>{const c=el("div","card");c.innerHTML=`<div class="chead"><h3>${esc(p.name)}</h3><button class="btn sm soft" data-prog="${p.id}">전부 가져오기</button></div><div class="sub">${p.days.map((d,i)=>`<b>${i+1}일</b> ${esc(C.PRESETS.find(x=>x.id===d).name)}`).join(" &nbsp;→&nbsp; ")}</div><div class="mini" style="margin-top:8px">${esc(p.note)}</div>`;gb.appendChild(c);});
-  gb.querySelectorAll("[data-prog]").forEach(b=>b.onclick=()=>{const p=C.PROGRAMS.find(x=>x.id===b.dataset.prog);p.days.forEach(d=>importPreset(d,true));renderRoutines();toast(`${p.name} 루틴 ${p.days.length}개를 추가했어요`);});
+  PROGRAMS.forEach(p=>{const c=el("div","card");c.innerHTML=`<div class="chead"><h3>${esc(p.name)}</h3><button class="btn sm soft" data-prog="${p.id}">전부 가져오기</button></div><div class="sub">${p.days.map((d,i)=>`<b>${i+1}일</b> ${esc(PRESETS.find(x=>x.id===d).name)}`).join(" &nbsp;→&nbsp; ")}</div><div class="mini" style="margin-top:8px">${esc(p.note)}</div>`;gb.appendChild(c);});
+  gb.querySelectorAll("[data-prog]").forEach(b=>b.onclick=()=>{const p=PROGRAMS.find(x=>x.id===b.dataset.prog);p.days.forEach(d=>importPreset(d,true));renderRoutines();toast(`${p.name} 루틴 ${p.days.length}개를 추가했어요`);});
 }
 function importPreset(pid,quiet){
-  const p=C.PRESETS.find(x=>x.id===pid);if(!p)return;
-  const items=p.items.map(it=>{let e=exByKey(it.key);if(!e){e=exFromCatalog(it.key);DB.exercises.push(e);}return {exerciseId:e.id,targetSets:it.sets,targetReps:it.reps,rest:it.rest,startW:it.w};});
+  const p=PRESETS.find(x=>x.id===pid);if(!p)return;
+  const items=p.items.map(it=>{let e=exByKey(it.key);if(!e){e=exFromCatalog(it.key);DB.exercises.push(e);}return {exerciseId:e.id,targetSets:it.sets,targetReps:it.reps,startW:it.w};});
   const idx=DB.routines.findIndex(r=>r.preset===pid);
   const r={id:idx>=0?DB.routines[idx].id:uid(),name:p.name,items,preset:pid};
   if(idx>=0)DB.routines[idx]=r;else DB.routines.push(r);
@@ -896,7 +851,7 @@ function editRoutine(rid){
   const box=$("#routineList");box.innerHTML="";$("#presetList").innerHTML="";$("#programList").innerHTML="";
   const c=el("div","card");
   c.innerHTML=`<div class="chead"><h3>${esc(r.name)}</h3><button class="btn sm primary" id="doneEdit">완료</button></div>
-    <div class="rt-h"><span>종목</span><span>세트</span><span>횟수</span><span>휴식초</span><span></span></div><div id="ritems"></div>
+    <div class="rt-h"><span>종목</span><span>세트</span><span>횟수</span><span></span></div><div id="ritems"></div>
     <button class="btn sm block" id="rAddBtn" style="margin-top:6px">${IC.plus}<span>운동 추가</span></button>
     <div class="divider"></div>
     <div class="row-btns"><button class="btn sm ghost" id="renameR" style="flex:1">이름 변경</button><button class="btn sm ghost" id="dupR" style="flex:1">복제</button><button class="btn sm ghost danger" id="delR" style="flex:1">삭제</button></div>`;
@@ -907,14 +862,13 @@ function editRoutine(rid){
     r.items.forEach((x,i)=>{const ex=exById(x.exerciseId);
       const row=el("div","rt-item");
       row.innerHTML=`<div class="nm">${esc(exName(x.exerciseId))}<small>${ex?`${esc(ex.part)} · ${esc(ex.equip)}`:""}</small></div>
-        <input type="number" inputmode="numeric" value="${x.targetSets||3}" data-ts="${i}"><input type="number" inputmode="numeric" value="${x.targetReps||15}" data-tr="${i}"><input type="number" inputmode="numeric" value="${x.rest||""}" placeholder="${opts().rest}" data-rs="${i}">
+        <input type="number" inputmode="numeric" value="${x.targetSets||3}" data-ts="${i}"><input type="number" inputmode="numeric" value="${x.targetReps||15}" data-tr="${i}">
         <div class="ord"><button data-up="${i}" aria-label="위로">${IC.up}</button><button data-dn="${i}" aria-label="아래로">${IC.down}</button></div>`;
       row.oncontextmenu=e=>e.preventDefault();
       it.appendChild(row);
     });
     it.querySelectorAll("[data-ts]").forEach(inp=>inp.oninput=()=>{r.items[+inp.dataset.ts].targetSets=Math.max(1,+inp.value||1);save();});
     it.querySelectorAll("[data-tr]").forEach(inp=>inp.oninput=()=>{r.items[+inp.dataset.tr].targetReps=Math.max(1,+inp.value||1);save();});
-    it.querySelectorAll("[data-rs]").forEach(inp=>inp.oninput=()=>{r.items[+inp.dataset.rs].rest=+inp.value||0;save();});
     it.querySelectorAll("[data-up]").forEach(b=>b.onclick=()=>{const i=+b.dataset.up;if(i>0){[r.items[i-1],r.items[i]]=[r.items[i],r.items[i-1]];save();draw();}});
     it.querySelectorAll("[data-dn]").forEach(b=>b.onclick=()=>{const i=+b.dataset.dn;if(i<r.items.length-1){[r.items[i+1],r.items[i]]=[r.items[i],r.items[i+1]];save();draw();}});
     it.querySelectorAll(".rt-item .nm").forEach((n,i)=>n.onclick=()=>{if(confirm(`'${exName(r.items[i].exerciseId)}' 을 루틴에서 뺄까요?`)){r.items.splice(i,1);save();draw();}});
@@ -1051,33 +1005,19 @@ $("#progPick").addEventListener("change",()=>{fillMetricOptions();renderProgress
 
 /* ===== 설정 ===== */
 function renderSettings(){
-  const o=opts();$("#restSeg").querySelectorAll("button").forEach(b=>b.classList.toggle("on",+b.dataset.r===o.rest));$("#optSound").checked=!!o.sound;$("#optVib").checked=!!o.vib;
-  applyTheme(localStorage.getItem(TKEY)||"system");syncBindUI();renderTipsState();
-  const standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
-  $("#installState").textContent=standalone?"지금 홈 화면 앱으로 실행 중입니다.":(/iPhone|iPad/.test(navigator.userAgent)?(/Safari/.test(navigator.userAgent)&&!/CriOS|KAKAOTALK|FBAN|Instagram/.test(navigator.userAgent)?"Safari에서 열려 있습니다. 공유 → 홈 화면에 추가를 누르세요.":"Safari가 아닌 브라우저입니다. 주소를 복사해 Safari에서 여세요."):"");
-  $("#verLine").textContent=`운동일지 v${APP_VER}`;
+  applyTheme(localStorage.getItem(TKEY)||"system");syncBindUI();
+  $("#verLine").textContent=`운동일지 v${APP_VER}${V.id?" · "+V.id:""}`;
 }
-$("#restSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{setOpt("rest",+b.dataset.r);renderSettings();});
-$("#optSound").onchange=e=>setOpt("sound",e.target.checked);$("#optVib").onchange=e=>setOpt("vib",e.target.checked);
 function applyTheme(t){if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");$("#themeRow").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));}
 $("#themeRow").querySelectorAll("button").forEach(b=>b.onclick=()=>{localStorage.setItem(TKEY,b.dataset.t);applyTheme(b.dataset.t);});
-async function copyText(t){try{await navigator.clipboard.writeText(t);toast("복사했어요");}catch(e){prompt("아래 주소를 복사하세요",t);}}
-const appUrl=()=>location.origin+location.pathname;
-$("#copyUrl").onclick=()=>copyText(appUrl());
-$("#copyCfg").onclick=()=>{const c=syncCfg();if(!c.url||!c.token){toast("먼저 동기화 설정을 저장하세요");return;}copyText(appUrl()+"#cfg="+btoa(encodeURIComponent(JSON.stringify({url:c.url,token:c.token}))));};
 $("#normalizeBtn").onclick=()=>{const n=normalizeDB(DB,true);save();rerenderAll();toast(n?`중복 종목 ${n}개를 합쳤어요`:"정리했어요 (중복 없음)");};
 $("#exportBtn").onclick=()=>{const blob=new Blob([JSON.stringify(DB,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`운동일지_백업_${todayISO()}.json`;a.click();URL.revokeObjectURL(a.href);toast("백업 파일을 내보냈어요");};
 $("#importBtn").onclick=()=>$("#importFile").click();
 $("#importFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.exercises||!d.sessions)throw 0;if(!confirm("현재 데이터를 불러온 파일로 교체할까요?"))return;DB=migrate(d);save();rerenderAll();toast("백업을 불러왔어요");}catch(err){toast("올바른 백업 파일이 아니에요");}};rd.readAsText(f);e.target.value="";};
 $("#resetBtn").onclick=()=>{if(!confirm("모든 기록·루틴·종목을 지웁니다. 계속할까요?"))return;if(!confirm("정말 초기화할까요? 되돌릴 수 없어요."))return;localStorage.removeItem(KEY);DB=load();rerenderAll();toast("초기화했어요");};
-$("#tipsRefresh").onclick=async()=>{if(!syncReady()){toast("구글시트 동기화를 먼저 연결하세요");return;}$("#tipsState").textContent="노션에서 받는 중…";
-  try{const j=await syncApi("notionSync");if(!j.data||!j.data.pages)throw new Error(j.error||"받은 데이터가 없어요");TIPS=buildTips(j.data);localStorage.setItem(TIPKEY,JSON.stringify(TIPS));renderTipsState();toast(`수업 기록 ${j.data.pages.length}개를 반영했어요`);}
-  catch(e){$("#tipsState").textContent="새로고침하지 못했어요: "+e.message+" (Apps Script v2가 배포됐는지 확인해 주세요)";}};
-$("#tipsReset").onclick=async()=>{localStorage.removeItem(TIPKEY);TIPS={tips:{}};await loadTips();toast("내장 데이터로 되돌렸어요");};
 
-/* ===== 구글시트 동기화 (Apps Script 웹앱) ===== */
-const SKEY="workoutlog.sync";
-function syncCfg(){try{return Object.assign({url:"",token:"",auto:true,lastAt:0},JSON.parse(localStorage.getItem(SKEY)||"{}"));}catch(e){return {url:"",token:"",auto:true,lastAt:0};}}
+/* ===== 구글 시트 DB 동기화 (Apps Script 웹앱). sheet: 스프레드시트 ID(비우면 스크립트가 붙은 시트, v3 이상) ===== */
+function syncCfg(){try{return Object.assign({url:"",token:"",sheet:"",auto:true,lastAt:0},JSON.parse(localStorage.getItem(SKEY)||"{}"));}catch(e){return {url:"",token:"",sheet:"",auto:true,lastAt:0};}}
 function syncCfgSave(c){localStorage.setItem(SKEY,JSON.stringify(c));}
 const syncReady=()=>{const c=syncCfg();return !!(c.url&&c.token);};
 function syncStatus(msg,ok){const s=$("#syncStatus");if(!s)return;s.textContent=msg;s.style.color=ok===false?"var(--bad)":"";}
@@ -1085,8 +1025,8 @@ async function syncApi(action,payload,params){
   const c=syncCfg();if(!c.url||!c.token)throw new Error("동기화 설정이 없어요");
   const ctrl=new AbortController();const tm=setTimeout(()=>ctrl.abort(),25000);
   try{let res;
-    if(action==="push"){res=await fetch(c.url,{method:"POST",body:JSON.stringify({token:c.token,action,db:payload}),headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow",signal:ctrl.signal});}
-    else{const u=new URL(c.url);u.searchParams.set("token",c.token);u.searchParams.set("action",action);u.searchParams.set("_",Date.now());if(params)for(const k in params)u.searchParams.set(k,params[k]);res=await fetch(u,{redirect:"follow",signal:ctrl.signal});}
+    if(action==="push"){res=await fetch(c.url,{method:"POST",body:JSON.stringify({token:c.token,action,sheet:c.sheet||"",db:payload}),headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow",signal:ctrl.signal});}
+    else{const u=new URL(c.url);u.searchParams.set("token",c.token);u.searchParams.set("action",action);if(c.sheet)u.searchParams.set("sheet",c.sheet);u.searchParams.set("_",Date.now());if(params)for(const k in params)u.searchParams.set(k,params[k]);res=await fetch(u,{redirect:"follow",signal:ctrl.signal});}
     const j=await res.json();if(!j.ok)throw new Error(j.error||"응답 오류");return j;
   }finally{clearTimeout(tm);}
 }
@@ -1118,13 +1058,15 @@ async function syncOnOpen(){
 }
 function fmtSyncTime(t){if(!t)return"-";const d=new Date(t);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;}
 function syncBindUI(){
-  const c=syncCfg();$("#syncUrl").value=c.url;$("#syncToken").value=c.token;$("#syncAuto").checked=!!c.auto;
+  const c=syncCfg();$("#syncUrl").value=c.url;$("#syncToken").value=c.token;$("#syncSheet").value=c.sheet||"";$("#syncAuto").checked=!!c.auto;
   if(syncReady())syncStatus(c.lastAt?`마지막 동기화 · ${fmtSyncTime(c.lastAt)}`:"설정했어요 · 아직 동기화 전이에요");
-  const read=()=>{const n=syncCfg();n.url=$("#syncUrl").value.trim();n.token=$("#syncToken").value.trim();n.auto=$("#syncAuto").checked;syncCfgSave(n);return n;};
+  const sheetId=s=>{const m=String(s||"").trim().match(/\/d\/([A-Za-z0-9_-]{20,})/);return m?m[1]:String(s||"").trim();}; // 시트 주소를 통째로 붙여 넣어도 ID만 꺼낸다
+  const read=()=>{const n=syncCfg();n.url=$("#syncUrl").value.trim();n.token=$("#syncToken").value.trim();n.sheet=sheetId($("#syncSheet").value);$("#syncSheet").value=n.sheet;n.auto=$("#syncAuto").checked;syncCfgSave(n);return n;};
   $("#syncSave").onclick=()=>{read();toast("동기화 설정을 저장했어요");syncStatus(syncReady()?"설정했어요 · 연결 테스트를 눌러 확인하세요":"아직 연결되지 않았어요");};
   $("#syncAuto").onchange=read;
   $("#syncTest").onclick=async()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}syncStatus("연결 확인 중…");
-    try{const j=await syncApi("meta");syncStatus(`연결됐어요 · 시트 마지막 저장 ${j.updatedAt?fmtSyncTime(j.updatedAt):"없음"}${j.ver?` · 스크립트 v${j.ver}`:" · 스크립트 v1이에요 (영상 재생·노션 새로고침은 v2가 필요해요)"}`);toast("연결됐어요");}
+    try{const j=await syncApi("meta");const c2=syncCfg();const warn=c2.sheet&&!(j.ver>=3)?" · 시트 ID는 스크립트 v3부터 적용돼요":"";
+      syncStatus(`연결됐어요${j.sheet?` · 시트 「${j.sheet}」`:""} · 마지막 저장 ${j.updatedAt?fmtSyncTime(j.updatedAt):"없음"}${j.ver?` · 스크립트 v${j.ver}`:" · 스크립트 v1이에요 (영상 재생은 v2 이상)"}${warn}`,warn?false:undefined);toast("연결됐어요");}
     catch(e){syncStatus("연결하지 못했어요: "+e.message,false);toast("연결하지 못했어요");}};
   $("#syncPush").onclick=()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}syncPush(false);};
   $("#syncPull").onclick=()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}if(!confirm("시트 내용으로 이 기기의 데이터를 교체합니다. 계속할까요?"))return;syncPull(false);};
@@ -1132,7 +1074,7 @@ function syncBindUI(){
 // 다른 브라우저에서 넘어온 동기화 설정(#cfg=...)
 function importCfgFromHash(){
   const m=location.hash.match(/#cfg=([^&]+)/);if(!m)return false;
-  try{const o=JSON.parse(decodeURIComponent(atob(m[1])));if(o.url&&o.token){const c=syncCfg();c.url=o.url;c.token=o.token;syncCfgSave(c);history.replaceState(null,"",location.pathname+location.search);toast("동기화 설정을 가져왔어요. 기록을 내려받을게요");return true;}}catch(e){}
+  try{const o=JSON.parse(decodeURIComponent(atob(m[1])));if(o.url&&o.token){const c=syncCfg();c.url=o.url;c.token=o.token;if(o.sheet)c.sheet=o.sheet;syncCfgSave(c);history.replaceState(null,"",location.pathname+location.search);toast("동기화 설정을 가져왔어요. 기록을 내려받을게요");return true;}}catch(e){}
   return false;
 }
 
