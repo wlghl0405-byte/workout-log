@@ -633,22 +633,32 @@ function openTip(exId){
   if(t.media.length){
     b.innerHTML+=`<div class="tip-sec"><h4>수업 영상 · 사진 <span class="mini">(${t.media.length})</span></h4><div class="player" id="player" style="display:none"></div>
       <div class="medias">${t.media.map((m,i)=>`<button class="mbtn" data-m="${i}">${m.type==="video"?IC.playc:IC.photo}<span>${fmtDate(m.date)}<small>${m.type==="video"?"영상":"사진"} · ${esc(m.title.replace(/운동\s?기록/,"").trim())}</small></span></button>`).join("")}</div>
-      <div class="mini" style="margin-top:8px">${syncReady()?"영상은 앱 안에서 바로 재생됩니다. 안 되면 노션에서 열립니다.":"구글 시트 DB 동기화를 연결하면 앱 안에서 재생됩니다. 지금은 노션으로 열립니다."}</div></div>`;
+      <div class="mini" style="margin-top:8px">누르면 앱 안에서 바로 재생돼요. 안 되면 노션에서 열 수 있어요.</div></div>`;
   }
   if(t.notes.length||t.media.length){const pg=(t.notes[0]||t.media[0]).page;b.innerHTML+=`<div style="margin-top:14px"><a class="lnk" href="${notionLink(pg)}" target="_blank" rel="noopener">${IC.ext.replace("<svg",'<svg style="width:13px;height:13px;display:inline-block;vertical-align:-2px"')} 노션 수업 기록 열기</a></div>`;}
   if(!t.notes.length&&!t.media.length&&!(c&&c.desc))b.innerHTML+=`<div class="empty"><div class="t">아직 이 종목의 팁이 없어요</div><div class="h">종목을 표준 이름으로 바꾸면 PT 메모가 연결됩니다</div></div>`;
   openSheet(`${esc(ex.name)}`,b);
   b.querySelectorAll("[data-m]").forEach(btn=>btn.onclick=()=>playMedia(t.media[+btn.dataset.m],b.querySelector("#player")));
 }
+// 영상·사진 재생: 공개 노션 페이지의 /signed/ 주소는 서명 URL(file.notion.so)로 302 리다이렉트되므로
+// <video>·<img>에 그대로 넣으면 동기화·Apps Script 없이도 앱 안에서 바로 재생된다.
+// 그게 막히면 Apps Script(notionFile)로 서명 URL을 받고, 그것도 안 되면 노션으로 여는 버튼을 보여 준다.
+const dashId=id=>String(id).replace(/-/g,"").replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/,"$1-$2-$3-$4-$5");
+const notionSignedUrl=m=>`${NOTION_SITE}/signed/${encodeURIComponent(m.src)}?table=block&id=${dashId(m.block)}`;
 const mediaCache={};
+function mediaEl(m,url){return m.type==="video"?`<video src="${url}" controls playsinline autoplay preload="metadata"></video>`:`<img src="${url}" alt="">`;}
 async function playMedia(m,box){
-  if(!syncReady()){window.open(notionLink(m.page,m.block),"_blank");return;}
-  box.style.display="block";box.innerHTML=`<div class="pl">불러오는 중…</div>`;box.scrollIntoView({behavior:"smooth",block:"nearest"});
-  try{
-    let u=mediaCache[m.block];
-    if(!u||u.exp<Date.now()){const j=await syncApi("notionFile",null,{block:m.block,src:m.src});if(!j.url)throw new Error(j.error||"영상 주소를 못 받았어요");u={url:j.url,exp:Date.now()+50*60e3};mediaCache[m.block]=u;}
-    box.innerHTML=m.type==="video"?`<video src="${u.url}" controls playsinline autoplay preload="metadata"></video>`:`<img src="${u.url}" alt="">`;
-  }catch(e){box.innerHTML=`<div class="pl">재생하지 못했어요 (${esc(e.message)}) · 노션에서 열어요</div>`;window.open(notionLink(m.page,m.block),"_blank");}
+  box.style.display="block";box.scrollIntoView({behavior:"smooth",block:"nearest"});
+  const fail=msg=>{box.innerHTML=`<div class="pl" style="flex-direction:column;gap:10px;padding:16px;text-align:center">${esc(msg)}<a class="btn sm" style="color:#fff;border-color:rgba(255,255,255,.4)" href="${notionLink(m.page,m.block)}" target="_blank" rel="noopener">노션에서 열기</a></div>`;};
+  const tryScript=async()=>{ // 2차: Apps Script v2+ 서명 URL
+    if(!syncReady()){fail("영상을 불러오지 못했어요");return;}
+    try{let u=mediaCache[m.block];
+      if(!u||u.exp<Date.now()){const j=await syncApi("notionFile",null,{block:m.block,src:m.src});if(!j.url)throw new Error(j.error||"스크립트가 v1이에요");u={url:j.url,exp:Date.now()+50*60e3};mediaCache[m.block]=u;}
+      box.innerHTML=mediaEl(m,u.url);const el=box.firstElementChild;el.onerror=()=>fail("영상을 재생하지 못했어요");
+    }catch(e){fail("영상을 불러오지 못했어요 ("+e.message+")");}
+  };
+  box.innerHTML=mediaEl(m,notionSignedUrl(m)); // 1차: 공개 페이지 서명 리다이렉트
+  const el=box.firstElementChild;el.onerror=tryScript;
 }
 
 /* ===== 오늘(기록) ===== */
@@ -1066,7 +1076,7 @@ function syncBindUI(){
   $("#syncAuto").onchange=read;
   $("#syncTest").onclick=async()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}syncStatus("연결 확인 중…");
     try{const j=await syncApi("meta");const c2=syncCfg();const warn=c2.sheet&&!(j.ver>=3)?" · 시트 ID는 스크립트 v3부터 적용돼요":"";
-      syncStatus(`연결됐어요${j.sheet?` · 시트 「${j.sheet}」`:""} · 마지막 저장 ${j.updatedAt?fmtSyncTime(j.updatedAt):"없음"}${j.ver?` · 스크립트 v${j.ver}`:" · 스크립트 v1이에요 (영상 재생은 v2 이상)"}${warn}`,warn?false:undefined);toast("연결됐어요");}
+      syncStatus(`연결됐어요${j.sheet?` · 시트 「${j.sheet}」`:""} · 마지막 저장 ${j.updatedAt?fmtSyncTime(j.updatedAt):"없음"}${j.ver?` · 스크립트 v${j.ver}`:" · 스크립트 v1이에요"}${warn}`,warn?false:undefined);toast("연결됐어요");}
     catch(e){syncStatus("연결하지 못했어요: "+e.message,false);toast("연결하지 못했어요");}};
   $("#syncPush").onclick=()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}syncPush(false);};
   $("#syncPull").onclick=()=>{read();if(!syncReady()){toast("URL과 토큰을 입력하세요");return;}if(!confirm("시트 내용으로 이 기기의 데이터를 교체합니다. 계속할까요?"))return;syncPull(false);};
